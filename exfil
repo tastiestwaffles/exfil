@@ -1,0 +1,21 @@
+#Install missing 7zip module that worked for me 
+
+install-module -name 7zip4powershell -ErrorAction SilentlyContinue
+
+$filePath = "C:\users\$env:USERNAME\desktop\pii"
+$filedestination = "c:\users\$env:USERNAME\desktop\exfil"
+
+gci $filepath\*.* | Compress-7Zip -ArchiveFileName $filedestination\text.7z
+Compress-Archive $filedestination\text.7z  $filedestination\text2.zip -Force
+Compress-7Zip $filedestination\text2.zip -archivefilename $filedestination\text2.7z -Password "I love Passwords"
+Copy-item $filedestination\text2.7z $filedestination\text3.7z
+Compress-7Zip $filedestination\text3.7z -format BZip2 -ArchiveFileName $filedestination\bzip.bzip2
+Compress-7Zip $filedestination\bzip.bzip2 -Format BZip2 -ArchiveFileName $filedestination\COMPLEXPASSWORDUPLOADTOGDRIVE.bzip2
+
+#Cleaning up
+
+Remove-Item $filedestination\bzip.bzip2
+Remove-Item $filedestination\text.7z
+Remove-Item $filedestination\text2.7z
+Remove-Item $filedestination\text2.zip
+Remove-Item $filedestination\text3.7z
